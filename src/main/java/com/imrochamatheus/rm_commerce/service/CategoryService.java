@@ -50,6 +50,15 @@ public class CategoryService {
         return this.toDTO(category);
     }
 
+    @Transactional(readOnly = true)
+    public CategoryDTO getByName(String name) {
+        Category category = this.categoryRepository
+                .findByNameContainingIgnoreCase(name.toUpperCase())
+                .orElseThrow(() -> new NotFoundException("Category with name " + name + " does not exists"));
+
+        return this.toDTO(category);
+    }
+
     @Transactional
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
         Optional<Category> optionalCategory = this.categoryRepository.findByName(categoryDTO.getName());
@@ -68,6 +77,7 @@ public class CategoryService {
                 .orElseThrow(() -> new NotFoundException("Category with id " + id + " does not exists"));
 
         category.setName(categoryDTO.getName());
+        this.categoryRepository.save(category);
 
         return this.toDTO(category);
     }

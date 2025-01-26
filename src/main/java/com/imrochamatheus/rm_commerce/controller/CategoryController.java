@@ -2,7 +2,6 @@ package com.imrochamatheus.rm_commerce.controller;
 
 import com.imrochamatheus.rm_commerce.dto.CategoryDTO;
 import com.imrochamatheus.rm_commerce.service.CategoryService;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -28,6 +27,11 @@ public class CategoryController {
     @GetMapping("/{id}")
     public ResponseEntity<CategoryDTO> getById(@PathVariable Long id) {
         return ResponseEntity.ok(this.categoryService.getById(id));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<CategoryDTO> getByName(@RequestParam String name) {
+        return ResponseEntity.ok(this.categoryService.getByName(name));
     }
 
     @PostMapping
