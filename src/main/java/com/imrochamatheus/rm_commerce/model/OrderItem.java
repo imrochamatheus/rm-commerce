@@ -1,4 +1,4 @@
-package com.imrochamatheus.rm_commerce.models;
+package com.imrochamatheus.rm_commerce.model;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

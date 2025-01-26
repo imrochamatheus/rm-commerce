@@ -1,4 +1,4 @@
-package com.imrochamatheus.rm_commerce.models;
+package com.imrochamatheus.rm_commerce.model;
 
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.JoinColumn;
