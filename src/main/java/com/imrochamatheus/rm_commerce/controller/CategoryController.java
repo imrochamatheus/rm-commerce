@@ -3,6 +3,7 @@ package com.imrochamatheus.rm_commerce.controller;
 import com.imrochamatheus.rm_commerce.dto.CategoryDTO;
 import com.imrochamatheus.rm_commerce.service.CategoryService;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class CategoryController {
     }
 
     @PostMapping
-    public ResponseEntity<CategoryDTO> saveCategory(@RequestBody CategoryDTO categoryDTO, HttpServletRequest httpServletRequest) {
+    public ResponseEntity<CategoryDTO> saveCategory(@Valid @RequestBody CategoryDTO categoryDTO) {
         categoryDTO = this.categoryService.saveCategory(categoryDTO);
 
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
@@ -41,7 +42,8 @@ public class CategoryController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryDTO> updateById(@PathVariable Long id, @RequestBody CategoryDTO categoryDTO) {
+    public ResponseEntity<CategoryDTO> updateById(
+            @PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(this.categoryService.updateById(id, categoryDTO));
     }
 

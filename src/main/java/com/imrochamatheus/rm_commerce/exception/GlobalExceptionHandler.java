@@ -1,9 +1,11 @@
 package com.imrochamatheus.rm_commerce.exception;
 
 import com.imrochamatheus.rm_commerce.dto.ApiError;
+import com.imrochamatheus.rm_commerce.dto.ValidationError;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -48,5 +50,24 @@ public class GlobalExceptionHandler {
         ApiError apiError = this.buildApiError(status.value(), ex.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(status.value()).body(apiError);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException (
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        ValidationError validationError = new ValidationError();
+        validationError.setError("Validation error");
+        validationError.setPath(request.getRequestURI());
+        validationError.setStatus(status.value());
+        validationError.setTimestamp(Instant.now());
+
+        ex.getBindingResult().getFieldErrors().forEach(x -> {
+            validationError.addError(x.getField(), x.getDefaultMessage());
+        });
+
+        return ResponseEntity.status(status.value()).body(validationError);
     }
 }
