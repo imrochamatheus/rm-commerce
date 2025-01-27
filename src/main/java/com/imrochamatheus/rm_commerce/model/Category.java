@@ -3,6 +3,7 @@ package com.imrochamatheus.rm_commerce.model;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -20,6 +21,7 @@ public class Category {
     private String name;
 
     @Setter(AccessLevel.NONE)
+    @EqualsAndHashCode.Exclude
     @ManyToMany(mappedBy = "categories")
     private Set<Product> products = new HashSet<>();
 }
