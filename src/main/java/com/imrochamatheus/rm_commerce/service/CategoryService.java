@@ -6,6 +6,7 @@ import com.imrochamatheus.rm_commerce.exception.ResourceAlreadyExistsException;
 import com.imrochamatheus.rm_commerce.exception.ResourceIntegrityViolation;
 import com.imrochamatheus.rm_commerce.model.Category;
 import com.imrochamatheus.rm_commerce.repository.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
@@ -21,20 +22,15 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    private CategoryDTO toDTO (Category category) {
-        CategoryDTO categoryDTO = new CategoryDTO();
-        categoryDTO.setId(category.getId());
-        categoryDTO.setName(category.getName());
+    @Autowired
+    private ModelMapper modelMapper;
 
-        return categoryDTO;
+    private CategoryDTO toDTO (Category category) {
+        return this.modelMapper.map(category, CategoryDTO.class);
     }
 
     private Category fromDTO (CategoryDTO categoryDTO) {
-        Category category = new Category();
-        category.setId(categoryDTO.getId());
-        category.setName(categoryDTO.getName());
-
-        return category;
+      return this.modelMapper.map(categoryDTO, Category.class);
     }
 
     @Transactional(readOnly = true)
