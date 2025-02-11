@@ -14,7 +14,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
@@ -47,23 +49,28 @@ public class CategoryService {
     }
 
     @Transactional(readOnly = true)
-    public CategoryDTO getByName(String name) {
-        Category category = this.categoryRepository
-                .findByNameContainingIgnoreCase(name.toUpperCase())
-                .orElseThrow(() -> new NotFoundException("Category with name " + name + " does not exists"));
+    public List<CategoryDTO> getByName(String name) {
+        List<Category> categories = this.categoryRepository
+                .findByNameContainingIgnoreCase(name.toUpperCase());
 
-        return this.toDTO(category);
+        if(!categories.isEmpty()) {
+            return categories.stream().map(this::toDTO).collect(Collectors.toList());
+        }
+
+        throw new NotFoundException("Category with name " + name + " does not exists");
     }
 
     @Transactional
     public CategoryDTO saveCategory(CategoryDTO categoryDTO) {
-        Optional<Category> optionalCategory = this.categoryRepository.findByName(categoryDTO.getName());
+        Optional<Category> optionalCategory = this.categoryRepository.findByNameIgnoreCase(categoryDTO.getName());
 
         if(optionalCategory.isPresent()) {
             throw new ResourceAlreadyExistsException("Category already exists");
         }
 
+        categoryDTO.setId(null);
         Category category = this.fromDTO(categoryDTO);
+
         return this.toDTO(this.categoryRepository.save(category));
     }
 

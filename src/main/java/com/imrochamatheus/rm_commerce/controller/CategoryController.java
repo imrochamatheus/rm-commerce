@@ -2,15 +2,18 @@ package com.imrochamatheus.rm_commerce.controller;
 
 import com.imrochamatheus.rm_commerce.dto.CategoryDTO;
 import com.imrochamatheus.rm_commerce.service.CategoryService;
+import com.imrochamatheus.rm_commerce.validation.OnUpdate;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/categories")
@@ -30,7 +33,7 @@ public class CategoryController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<CategoryDTO> getByName(@RequestParam String name) {
+    public ResponseEntity<List<CategoryDTO>> getByName(@RequestParam String name) {
         return ResponseEntity.ok(this.categoryService.getByName(name));
     }
 
@@ -47,7 +50,8 @@ public class CategoryController {
 
     @PutMapping("/{id}")
     public ResponseEntity<CategoryDTO> updateById(
-            @PathVariable Long id, @Valid @RequestBody CategoryDTO categoryDTO) {
+            @PathVariable Long id,
+            @Validated({OnUpdate.class}) @RequestBody CategoryDTO categoryDTO) {
         return ResponseEntity.ok(this.categoryService.updateById(id, categoryDTO));
     }
 
