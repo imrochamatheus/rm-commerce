@@ -23,6 +23,17 @@ public class ModelMapperConfig {
                     .collect(Collectors.toSet());
         };
 
+        Converter<Set<CategoryDTO>, Set<Category>> categoriesDTOConverter = ctx -> {
+            return ctx.getSource()
+                    .stream()
+                    .map(cat -> modelMapper.map(cat, Category.class))
+                    .collect(Collectors.toSet());
+        };
+
+        modelMapper.createTypeMap(ProductDTO.class, Product.class)
+                .addMappings(mapper ->
+                        mapper.using(categoriesDTOConverter).map(ProductDTO::getCategories, Product::addCategories));
+
         modelMapper.createTypeMap(Product.class, ProductDTO.class)
                 .addMappings(mapper ->
                         mapper.using(categoriesConverter).map(Product::getCategories, ProductDTO::addCategories));
