@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -69,5 +70,16 @@ public class GlobalExceptionHandler {
         });
 
         return ResponseEntity.status(status.value()).body(validationError);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<ApiErrorDTO> handleMissingServletRequestParameterException (
+            MissingServletRequestParameterException ex,
+            HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+        ApiErrorDTO apiErrorDTO = this.buildApiError(status.value(), ex.getBody().getDetail(), request.getRequestURI());
+
+        return ResponseEntity.status(status.value()).body(apiErrorDTO);
     }
 }
