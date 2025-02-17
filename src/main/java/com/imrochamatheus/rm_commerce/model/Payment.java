@@ -1,9 +1,11 @@
 package com.imrochamatheus.rm_commerce.model;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.time.Instant;
 
+@Data
 @Entity
 @Table(name = "tb_payment")
 public class Payment {
@@ -19,31 +21,7 @@ public class Payment {
     @MapsId
     @JoinColumn(name = "order_id")
     private Order order;
-
-    public Payment(Long id, Instant moment) {
-        this.id = id;
-        this.moment = moment;
-    }
-
-    public Payment() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Instant getMoment() {
-        return moment;
-    }
-
-    public void setMoment(Instant moment) {
-        this.moment = moment;
-    }
-
+    
     @Override
     public String toString() {
         return "Payment{" +
